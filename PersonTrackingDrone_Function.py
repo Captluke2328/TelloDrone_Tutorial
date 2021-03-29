@@ -30,7 +30,6 @@ def initializeTello():
     print(myDrone.get_battery())
     myDrone.streamoff()
     myDrone.streamon()
-
     return myDrone
 
 def findImage(cap, W, H):
@@ -41,7 +40,6 @@ def findImage(cap, W, H):
     
     # Draw Middle Line
     cv2.line(img, (W // 2, 0), (W // 2, H), (0, 255, 0), 3)
-    
     return img
 
 def findObject(img, whT, W, H):
