@@ -19,7 +19,6 @@ net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 fbRange = [6200, 6800]
 
-
 def initializeTello():
     myDrone = Tello()
     myDrone.connect()
@@ -31,16 +30,19 @@ def initializeTello():
     print(myDrone.get_battery())
     myDrone.streamoff()
     myDrone.streamon()
-    return myDrone
 
+    return myDrone
 
 def findImage(cap, W, H):
     #success, img = cap.read()
     myFrame = cap.get_frame_read()
     myFrame = myFrame.frame
     img = cv2.resize(myFrame, (W, H))
+    
+    # Draw Middle Line
+    cv2.line(img, (W // 2, 0), (W // 2, H), (0, 255, 0), 3)
+    
     return img
-
 
 def findObject(img, whT, W, H):
     blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 1], 1, crop=False)
@@ -107,9 +109,13 @@ def trackFace(myDrone, cx, area, W, pid, pError):
     speed = int(np.clip(speed, -60, 60))
 
     if cx != 0:
-        if area >fbRange[0]:
+        if area < fbRange[1]:
             myDrone.yaw_velocity = speed
             myDrone.for_back_velocity = 20
+        
+        else:
+            myDrone.yaw_velocity = 0
+            myDrone.for_back_velocity = 0
 
     else:
         myDrone.for_back_velocity = 0

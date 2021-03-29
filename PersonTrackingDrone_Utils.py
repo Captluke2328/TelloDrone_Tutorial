@@ -22,8 +22,6 @@ while True:
 
     # Step 1
     img = findImage(myDrone, W, H)
-    # Draw Middle Line
-    cv2.line(img, (W // 2, 0), (W // 2, H), (0, 255, 0), 3)
 
     # Step 2
     info = findObject(img, whT, W, H)
