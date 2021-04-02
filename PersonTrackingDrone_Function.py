@@ -7,9 +7,9 @@ confThreshold = 0.5
 nms_threshold = 0.3
 
 classNames = []
-classesFile = r'E:\Python Project\Resources\AI_Files\Yolo_v3\coco.names'
-modelConfiguration = r'E:\Python Project\Resources\AI_Files\Yolo_v3\yolov3-tiny.cfg'
-modelWeights = r'E:\Python Project\Resources\AI_Files\Yolo_v3\yolov3-tiny.weights'
+classesFile = r'E:\Python Project\Resources\AI_Files\Yolo_v3\coco_test.names'
+modelConfiguration = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov3-tiny\yolov3-tiny.cfg'
+modelWeights = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov3-tiny\yolov3-tiny.weights'
 
 with open(classesFile, 'rt') as f:
     classNames = f.read().rstrip('\n').rsplit('\n')
@@ -17,7 +17,7 @@ with open(classesFile, 'rt') as f:
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
-fbRange = [6200, 6800]
+fbRange = [6200, 7800]
 
 def initializeTello():
     myDrone = Tello()
@@ -104,17 +104,14 @@ def findObject(img, whT, W, H):
 def trackFace(myDrone, cx, area, W, pid, pError):
     error = cx - W // 2
     speed = pid[0] * error + pid[1] * (error - pError)
-    speed = int(np.clip(speed, -60, 60))
+    speed = int(np.clip(speed, -100, 100))
 
     if cx != 0:
-        if area < fbRange[1]:
-            myDrone.yaw_velocity = speed
-            myDrone.for_back_velocity = 20
-        
-        else:
-            myDrone.yaw_velocity = 0
-            myDrone.for_back_velocity = 0
-
+        #if area > fbRange[0]:
+        myDrone.yaw_velocity = speed
+        #myDrone.up_down_velocity = 10
+        #myDrone.left_right_velocity = speed
+        myDrone.for_back_velocity = 20
     else:
         myDrone.for_back_velocity = 0
         myDrone.left_right_velocity = 0
