@@ -8,15 +8,25 @@ nms_threshold = 0.3
 
 classNames = []
 classesFile = r'E:\Python Project\Resources\AI_Files\Yolo_v3\coco_test.names'
-modelConfiguration = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov3-tiny\yolov3-tiny.cfg'
-modelWeights = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov3-tiny\yolov3-tiny.weights'
+modelConfiguration = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov4\yolov4.cfg'
+modelWeights = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov4\yolov4.weights'
+
+#classesFile = r'E:\Python Project\Resources\AI_Files\Yolo_v3\coco_test.names'
+#modelConfiguration = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov3\yolov3.cfg'
+#modelWeights = r'E:\Python Project\Resources\AI_Files\Yolo_v3\Yolov3\yolov3.weights'
+
 
 with open(classesFile, 'rt') as f:
     classNames = f.read().rstrip('\n').rsplit('\n')
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
-net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
-net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
+## Run Using CPU
+#net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+#net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
+
+net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+
 fbRange = [6200, 7800]
 
 def initializeTello():
@@ -84,7 +94,7 @@ def findObject(img, whT, W, H):
         cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
 
         # Draw Rectangle line on the detected object
-        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 3)
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 5)
         cv2.putText(img, f'{classNames[classIds[i]].upper()} {int(confidenceLevel[i] * 100)}%', (x, y - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
@@ -109,9 +119,9 @@ def trackFace(myDrone, cx, area, W, pid, pError):
     if cx != 0:
         #if area > fbRange[0]:
         myDrone.yaw_velocity = speed
-        #myDrone.up_down_velocity = 10
+        #myDrone.up_down_velocity = 5
         #myDrone.left_right_velocity = speed
-        myDrone.for_back_velocity = 20
+        myDrone.for_back_velocity = 30
     else:
         myDrone.for_back_velocity = 0
         myDrone.left_right_velocity = 0
