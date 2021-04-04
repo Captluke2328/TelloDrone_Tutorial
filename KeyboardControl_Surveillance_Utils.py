@@ -33,19 +33,21 @@ def getKeyboardInput():
 
     return [lr, fb, ud, yv]
 
-while True:
-    ## Stream Image
-    img = findImage(myDrone, W, H)
-    info = findObject(img, whT, W, H)
-
+def readkeyboard():
     ## Read Keyboard Key
     #q = queue.Queue()
     #threading.Thread(target=getKeyboardInput).start()
     #vals = q.get()
-    #vals = getKeyboardInput()
-    #myDrone.send_rc_control(vals[0], vals[1], vals[2], vals[3])
+    vals = getKeyboardInput()
+    myDrone.send_rc_control(vals[0], vals[1], vals[2], vals[3])
 
-
+while True:
+    ## Stream Image
+    img = findImage(myDrone, W, H)
+    info = findObject(img, whT, W, H)
+    
+    readkeyboard()
+    
     cv2.imshow("Tracking", img)
     if cv2.waitKey(1) & 0XFF==ord('q'):
         myDrone.land()
