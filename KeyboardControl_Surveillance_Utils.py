@@ -9,7 +9,7 @@ W,H = 640,480
 
 def getKeyboardInput():
     lr, fb, ud, yv = 0,0,0,0
-    speed = 70
+    speed = 80
 
     if kp.is_pressed('LEFT'): lr = -speed
 
