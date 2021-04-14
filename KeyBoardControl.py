@@ -10,7 +10,7 @@ print(me.get_battery())
 
 def getKeyboardInput():
     lr, fb, ud, yv = 0,0,0,0
-    speed = 50
+    speed = 70
 
     if kp.is_pressed('LEFT'): lr = -speed
 
@@ -36,5 +36,9 @@ def getKeyboardInput():
 
 while True:
     vals = getKeyboardInput()
-    me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
-    sleep(0.05)
+    if vals !=0:
+        me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
+        sleep(0.05)
+    else:
+        me.send_rc_control(0, 0, 0, 0)
+        sleeep(0.05)

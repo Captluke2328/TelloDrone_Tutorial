@@ -7,7 +7,7 @@ myDrone = initializeTello()
 
 W,H = 640,480
 
-pid = [1/10,1/8,0]
+pid = [0.2,0.2,0]
 pError = 0
 
 #cap = cv2.VideoCapture(0)
@@ -18,6 +18,7 @@ while True:
     ## Flight
     if startCounter == 0:
         myDrone.takeoff()
+        #myDrone.set_speed(60)
         startCounter = 1
 
     # Step 1
