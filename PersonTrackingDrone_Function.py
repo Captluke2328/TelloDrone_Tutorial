@@ -121,7 +121,7 @@ def trackFace(myDrone, cx, area, W, pid, pError):
         myDrone.yaw_velocity = speed
         #myDrone.up_down_velocity = 5
         #myDrone.left_right_velocity = speed
-        myDrone.for_back_velocity = 30
+        #myDrone.for_back_velocity = 30
     else:
         myDrone.for_back_velocity = 0
         myDrone.left_right_velocity = 0
