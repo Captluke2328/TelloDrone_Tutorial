@@ -1,6 +1,8 @@
+import multiprocessing
 from time import sleep
 from KeyboardControl_Surveillance_Function import *
-import threading, queue
+from multiprocessing import Process, Pipe, Pool
+import threading
 import cv2
 
 myDrone = initializeTello()
@@ -41,16 +43,21 @@ def readkeyboard():
     vals = getKeyboardInput()
     myDrone.send_rc_control(vals[0], vals[1], vals[2], vals[3])
 
-while True:
-    ## Stream Image
-    img = findImage(myDrone, W, H)
-    info = findObject(img, whT, W, H)
-    
-    readkeyboard()
-    
-    cv2.imshow("Tracking", img)
-    if cv2.waitKey(1) & 0XFF==ord('q'):
-        myDrone.land()
-        sleep(1)
-        break
+if __name__ == '__main__':
+    while True:
+
+        img = findImage(myDrone, W, H)
+        info = findObject(img, whT, W, H)
+        readkeyboard()
+
+        """With Multiprocessing"""
+        #keyBoard = threading.Thread(target=readkeyboard)
+        #keyBoard.start()
+
+        cv2.imshow("Tracking", img)
+        if cv2.waitKey(1) & 0XFF==ord('q'):
+            myDrone.land()
+            sleep(1)
+            break
+
 

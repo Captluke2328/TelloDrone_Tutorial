@@ -24,6 +24,7 @@ net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
 #net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 #net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
+## Run Using GPU
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
@@ -121,7 +122,7 @@ def trackFace(myDrone, cx, area, W, pid, pError):
         myDrone.yaw_velocity = speed
         #myDrone.up_down_velocity = 5
         #myDrone.left_right_velocity = speed
-        myDrone.for_back_velocity = 30
+        #myDrone.for_back_velocity = 30
     else:
         myDrone.for_back_velocity = 0
         myDrone.left_right_velocity = 0
