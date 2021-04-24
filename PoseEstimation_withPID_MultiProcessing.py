@@ -59,7 +59,7 @@ class poseDetectionModule():
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 self.lmList.append([id, cx, cy, w, h])
                 if draw:
-                    cv2.circle(img, (cx, cy), 8, (0, 0, 255), cv2.FILLED)
+                    cv2.circle(img, (cx, cy), 2, (0, 0, 255), cv2.FILLED)
         return self.lmList
 
     def findPID(self, img, lmList, pid, pError, detected, myDrone, draw=True):
@@ -70,13 +70,16 @@ class poseDetectionModule():
             if (lmList[16][2] > lmList[12][2]) & (lmList[15][2] > lmList[11][2]):
                 speedRightLeft = 0
                 speedForwardBackward = 0
+                cv2.putText(img, "Tracking", (40, 50), cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
 
-            # """Detect Nose, Right Arm, Shoulders and Track, Move Right"""
+            """Detect Nose, Right Arm, Shoulders and Track, Move Right"""
             #if lmList[0][0] == 0:
             if (lmList[16][2] < lmList[12][2]) & (lmList[15][2] > lmList[11][2]):
                 print("Right arm is up")
                 speedRightLeft = -30
                 speedForwardBackward = 0
+                cv2.putText(img, "Move Right", (40, 50), cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
+
 
             """Detect Nose, Left Arm, Shoulders and Track, Move Left"""
             #if lmList[0][0] == 0:
@@ -84,23 +87,30 @@ class poseDetectionModule():
                 print("Left arm is up")
                 speedRightLeft = 30
                 speedForwardBackward = 0
+                cv2.putText(img, "Move Left", (40, 50), cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
+
 
             """Detect Nose, Right Elbow, Shoulder and Track, Move Forward"""
             if (lmList[19][2] < lmList[11][2]) & (lmList[15][2] > lmList[11][2]):
                 print("Move Forward")
                 speedRightLeft = 0
                 speedForwardBackward = 40
+                cv2.putText(img, "Move Forward", (400, 50), cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
+
 
             """Detect Nose, Left Elbow, Shoulder and Track, Move Backward"""
             if (lmList[20][2] < lmList[12][2]) & (lmList[16][2] > lmList[12][2]):
                 print("Move Backward")
                 speedRightLeft = 0
-                speedForwardBackward = -30
+                speedForwardBackward = -40
+                cv2.putText(img, "Move Backward", (350, 50), cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
+
 
             """Detect Nose, Left Arm, Right Arm, Shoulder and Track, Stop"""
-            if (lmList[16][2] < lmList[12][2]) & (lmList[15][2] < lmList[11][2]):
-                print("Stop")
-                myDrone.land()
+            #if (lmList[16][2] < lmList[12][2]) & (lmList[15][2] < lmList[11][2]):
+            #    print("Stop")
+            #    myDrone.land()
+            #    cv2.putText(img, "Stop", (40, 50), cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
 
             posX_error = lmList[0][1] - lmList[0][3] // 2
             posY_error = lmList[0][2] - lmList[0][4] // 2
@@ -141,10 +151,9 @@ class poseDetectionModule():
                                     myDrone.yaw_velocity)
             print(0, speed)
 
-
 def main():
     """Webcam"""
-    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture(0)
 
     detector = poseDetectionModule()
     w, h = 640, 480
@@ -154,21 +163,24 @@ def main():
     startCounter = 0
 
     """Tello Webcam Return"""
-    #return detector,w,h,pid,pError,speed, startCounter
+    return detector,w,h,pid,pError,speed, startCounter
 
     """WebCam Return"""
-    return cap, detector, w, h, pid, pError, speed, startCounter
+    #return cap, detector, w, h, pid, pError, speed, startCounter
 
 if __name__ == "__main__":
 
     """Tello WebCam"""
-    #detector,  w, h, pid, pError, speed, startCounter = main()
+    detector,  w, h, pid, pError, speed, startCounter = main()
 
     """WebCam"""
-    cap, detector, w, h, pid, pError, speed, startCounter = main()
+    #cap, detector, w, h, pid, pError, speed, startCounter = main()
 
     myDrone = detector.initialize()
+    time.sleep(3)
     myDrone.takeoff()
+    time.sleep(1)
+    #myDrone.send_rc_control(0, 0, 0, 20)
     while True:
 
         #if startCounter == 0:
@@ -176,10 +188,10 @@ if __name__ == "__main__":
         #    time.sleep(1)
         #startCounter = 1
 
-        success, img = cap.read()
+        #success, img = cap.read()
 
         ## Step 0 - Find Image from Tello WebCam
-        #img = detector.findImage(myDrone, w,h)
+        img = detector.findImage(myDrone, w,h)
 
         ## Step 1 -Detect Pose
         img = detector.findPose(img)
@@ -188,7 +200,7 @@ if __name__ == "__main__":
         lmList = detector.findPosition(img)
 
         ## Step 3 - Draw Line
-        img = detector.drawLine(img, w, h)
+        #img = detector.drawLine(img, w, h)
 
         ## Step 3 - Find PID speed
         if len(lmList) != 0:
@@ -203,7 +215,7 @@ if __name__ == "__main__":
         #                        myDrone.up_down_velocity,
         #                        myDrone.yaw_velocity)
 
-        cv2.imshow("Result", img)
+        cv2.imshow("Output", img)
         if cv2.waitKey(1) & 0XFF == ord('q'):
             myDrone.land()
             time.sleep(1)
