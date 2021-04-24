@@ -41,4 +41,4 @@ while True:
         sleep(0.05)
     else:
         me.send_rc_control(0, 0, 0, 0)
-        sleeep(0.05)
+        sleep(0.05)
