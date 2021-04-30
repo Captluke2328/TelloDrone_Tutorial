@@ -222,5 +222,4 @@ if __name__ == "__main__":
             myDrone.land()
             time.sleep(1)
             break
-
 cv2.destroyAllWindows()
