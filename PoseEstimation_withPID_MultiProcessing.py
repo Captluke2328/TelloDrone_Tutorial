@@ -190,6 +190,7 @@ if __name__ == "__main__":
         #    time.sleep(1)
         #startCounter = 1
 
+        ## Step 0 - Find Image from Webcam
         success, img = cap.read()
 
         ## Step 0 - Find Image from Tello WebCam
