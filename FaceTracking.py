@@ -12,17 +12,19 @@ print(me.get_battery())
 me.streamon()
 
 me.takeoff()
-me.send_rc_control(0,0,20,0)
+me.send_rc_control(0, 0, 20, 0)
 sleep(1)
 
-w,h = 360,240
-fbRange = [6200,78400]
+w, h = 360, 240
+fbRange = [6200, 78400]
 
 pid = [0.4, 0.4, 0]
 pError = 0
 
+
 def findFace(img):
-    faceCascade = cv2.CascadeClassifier(r'C:\Users\Lukas\Desktop\TelloDrone Tutorial\Haarcascade_xml\haarcascade_frontalface_default.xml')
+    faceCascade = cv2.CascadeClassifier(
+        r'C:\Users\Lukas\Desktop\TelloDrone Tutorial\Haarcascade_xml\haarcascade_frontalface_default.xml')
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = faceCascade.detectMultiScale(imgGray, 1.2, 8)
     myFaceListC = []
@@ -44,7 +46,8 @@ def findFace(img):
     else:
         return img, [[0, 0], 0]
 
-def trackFace( info, w, pid, pError):
+
+def trackFace(info, w, pid, pError):
     area = info[1]
     x, y = info[0]
     fb = 0
@@ -57,13 +60,14 @@ def trackFace( info, w, pid, pError):
     elif area > fbRange[1]:
         fb = -30
     elif area < fbRange[0] and area != 0:
-       fb = 30
+        fb = 30
     if x == 0:
         speed = 0
         error = 0
     print(area)
     me.send_rc_control(0, fb, 0, speed)
     return error
+
 
 while True:
     img = me.get_frame_read().frame
@@ -77,8 +81,3 @@ while True:
         me.land()
         sleep(1)
         break
-
-
-
-
-

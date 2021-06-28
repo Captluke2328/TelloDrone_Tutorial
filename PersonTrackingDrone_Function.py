@@ -20,15 +20,16 @@ with open(classesFile, 'rt') as f:
     classNames = f.read().rstrip('\n').rsplit('\n')
 
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
-## Run Using CPU
-#net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
-#net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
+# Run Using CPU
+# net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+# net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
-## Run Using GPU
+# Run Using GPU
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
 fbRange = [6200, 7800]
+
 
 def initializeTello():
     myDrone = Tello()
@@ -43,15 +44,17 @@ def initializeTello():
     myDrone.streamon()
     return myDrone
 
+
 def findImage(cap, W, H):
     #success, img = cap.read()
     myFrame = cap.get_frame_read()
     myFrame = myFrame.frame
     img = cv2.resize(myFrame, (W, H))
-    
+
     # Draw Middle Line
     cv2.line(img, (W // 2, 0), (W // 2, H), (0, 255, 0), 3)
     return img
+
 
 def findObject(img, whT, W, H):
     blob = cv2.dnn.blobFromImage(img, 1 / 255, (whT, whT), [0, 0, 1], 1, crop=False)
@@ -118,7 +121,7 @@ def trackFace(myDrone, cx, area, W, pid, pError):
     speed = int(np.clip(speed, -100, 100))
 
     if cx != 0:
-        #if area > fbRange[0]:
+        # if area > fbRange[0]:
         myDrone.yaw_velocity = speed
         #myDrone.up_down_velocity = 5
         #myDrone.left_right_velocity = speed
