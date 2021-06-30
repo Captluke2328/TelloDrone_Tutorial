@@ -50,12 +50,13 @@ class NoseTracking():
     def findImage(self, cap, w, h):
         #success, img = cap.read()
         myFrame = cap.get_frame_read()
-        myFrame = myFrame.frame
-        self.img = cv2.resize(myFrame, (w, h))
+        #myFrame = myFrame.frame
+        #self.img = cv2.resize(myFrame, (w, h))
+        self.img = myFrame.frame
 
     def findPose(self, draw=False):
         """ This is for Webcam """
-        success, self.img = self.cap.read()
+        #success, self.img = self.cap.read()
 
         imgRGB = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
         self.results = self.pose.process(imgRGB)
@@ -160,14 +161,14 @@ if __name__ == "__main__":
     """ Tello Webcam """
     myDrone = nose.initialize()
     sleep(2)
-    myDrone.takeoff()
-    sleep(1)
+    #myDrone.takeoff()
+    #sleep(1)
     w, h = 640, 480
 
     while True:
 
         # Step 0 - Find Image From Tello Webcam
-        #img = nose.findImage(myDrone, w, h)
+        img = nose.findImage(myDrone, w, h)
 
         # Step 1 - Find Pose
         nose.findPose()

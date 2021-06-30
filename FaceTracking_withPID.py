@@ -171,9 +171,9 @@ if __name__ == "__main__":
 
     """ Tello Webcam """
     myDrone = face.initialize()
-    sleep(2)
-    myDrone.takeoff()
-    sleep(1)
+    #sleep(2)
+    #myDrone.takeoff()
+    #sleep(1)
     w, h = 640, 480
     while True:
 
