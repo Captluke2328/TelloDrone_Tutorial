@@ -6,7 +6,7 @@ from djitellopy import Tello
 
 class NoseHandTracking():
     def __init__(self, mode=False, upBody=False, smooth=True, detection=0.5, trackCon=0.5,maxHands=1):
-        self.cap = cv2.VideoCapture(0)
+        #self.cap = cv2.VideoCapture(0)
         self.landmark = [0, 7, 8]
         self.img = 0
         self.mode = mode
@@ -21,7 +21,8 @@ class NoseHandTracking():
         self.c = 0
         self.cx = 0
         self.cy = 0
-        self.pError = 0
+        self.pXError = 0
+        self.pYError = 0
         self.pid = [0.2, 0.2, 0]
         self.posX_error = 0
         self.posY_error = 0
@@ -106,6 +107,10 @@ class NoseHandTracking():
                 cv2.rectangle(self.img, (0, 0), (self.w, 40), (0, 0, 0), -1)
         else:
             self.detected = False
+            self.speedX = 0
+            self.speedY = 0
+            self.cx = 0
+            self.cy = 0
         
         return [lnList,lhList]
 
@@ -126,8 +131,8 @@ class NoseHandTracking():
                     cv2.circle(self.img, (post[0][0][1], post[0][0][2]), 6, (0, 255, 0), cv2.FILLED)
 
                     # Draw Arrow Line from Middle Image to Nose Image
-                    cv2.arrowedLine(self.img, (self.w // 2, self.h // 2),
-                                    (int(post[0][0][1]), int(post[0][0][2])), (255, 0, 255), 5, 10)        
+                    #cv2.arrowedLine(self.img, (self.w // 2, self.h // 2),
+                    #                (int(post[0][0][1]), int(post[0][0][2])), (255, 0, 255), 5, 10)        
 
     def findPID(self,post, draw=True):
         if len(post[0]) !=0 and post[0][0][0] == 0:
@@ -156,48 +161,61 @@ class NoseHandTracking():
 
                 if fingers == [1,1,0,0,0]:
                     self.command = "Left"
+                    self.speedRightLeft = 30
+                    self.speedForwardBackward = 0
                 
                 elif fingers == [1,0,0,0,1]:
                     self.command = "Right"
+                    self.speedRightLeft = -30
+                    self.speedForwardBackward = 0
                 
                 elif fingers == [1,1,1,0,0]:
                     self.command = "Forward"
+                    self.speedRightLeft = 0
+                    self.speedForwardBackward = 30
 
                 elif fingers == [1,1,1,1,1]:
                     self.command = "Backward"
+                    self.speedRightLeft = 0
+                    self.speedForwardBackward = -20
 
                 elif fingers == [1,1,0,0,1]:
                     self.command = "Stop"
                 
                 else:
                     self.command = "Tracking"
+                    self.speedRightLeft = 0
+                    self.speedForwardBackward = 0
 
             else:
                 self.command = "Tracking"
+                self.speedRightLeft = 0
+                self.speedForwardBackward = 0
 
             #print(post[1][self.tipIds[id]])
 
-            self.posX_error = post[0][0][1] - self.w//2
-            self.posY_error = post[0][0][1] - self.h//2
+        self.posX_error = post[0][0][1] - post[0][0][3]//2
+        self.posY_error = post[0][0][1] - post[0][0][4]//2
 
-            self.speedX = self.pid[0] * self.posX_error + self.pid[1] * (self.posX_error - self.pError)
-            self.speedY = self.pid[0] * self.posY_error + self.pid[1] * (self.posY_error - self.pError)
+        self.speedX = self.pid[0] * self.posX_error + self.pid[1] * (self.posX_error - self.pXError)
+        self.speedY = self.pid[0] * self.posY_error + self.pid[1] * (self.posY_error - self.pYError)
 
-            self.speedX = int(np.clip(self.speedX, -100, 100))
-            self.speedY = int(np.clip(self.speedY, -100, 100))
-  
+        self.speedX = int(np.clip(self.speedX, -100, 100))
+        self.speedY = int(np.clip(self.speedY, -100, 100))
+
+        self.pXError = self.posX_error
+        self.pYError = self.posX_error
+
+        cv2.putText(self.img, self.command, (self.w//2-40, 35),cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
+        cv2.putText(self.img, "Speed: " + str(self.speedX), (self.w//2-60, self.h-10),cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
+
         if draw:
             if self.detected:
                 self.myDrone.yaw_velocity = self.speedX
                 self.myDrone.up_down_velocity = -self.speedY
-                self.myDrone.left_right_velocity = 0
-                self.myDrone.for_back_velocity = 15
-
-                print(self.speedX,self.command)
-
-                cv2.putText(self.img, self.command, (self.w//2-40, 35),cv2.FONT_HERSHEY_PLAIN, 2, (225, 255, 0), 2)
-                cv2.putText(self.img, "Speed: " + str(self.speedX), (self.w//2-60, self.h-10),cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
-
+                self.myDrone.left_right_velocity = self.speedRightLeft
+                self.myDrone.for_back_velocity = self.speedForwardBackward
+         
             else:
                 self.myDrone.for_back_velocity = 0
                 self.myDrone.left_right_velocity = 0
@@ -215,9 +233,9 @@ if __name__ == "__main__":
 
     """ Tello Webcam """
     myDrone = detect.initialize()
-    sleep(2)
-    #myDrone.takeoff()
-    #sleep(1)
+    sleep(1)
+    myDrone.takeoff()
+    sleep(1)
     w,h = 640,480
 
     while True:
@@ -247,7 +265,7 @@ if __name__ == "__main__":
 
         cv2.imshow("Streaming", detect.img)
         if cv2.waitKey(1) & 0XFF == ord('q'):
-            #nose.myDrone.land()
+            detect.myDrone.land()
             sleep(1)
             break
     cv2.destroyAllWindows()
