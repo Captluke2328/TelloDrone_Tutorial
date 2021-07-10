@@ -7,7 +7,7 @@ from time import sleep
 
 class faceDetectionCustom():
     def __init__(self, mode=False, detection=0.5, trackCon=0.5,maxHands=1):
-        #self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0)
         self.mode = mode
         self.detectionCon = detection
         self.trackCon = trackCon
@@ -70,7 +70,7 @@ class faceDetectionCustom():
         self.image = cv2.resize(myFrame, (w, h))
 
     def findNoseHand(self, draw=False, NoseDetect=True, HandDetect=True): 
-        #success, self.image = self.cap.read()
+        success, self.image = self.cap.read()
         imageRGB = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         self.resultsHand = self.hands.process(imageRGB)
 
@@ -180,7 +180,7 @@ class faceDetectionCustom():
             cv2.line(self.image, (self.x1, self.y1),
                      (self.x1, self.y1 - self.l), (255, 0, 255), self.t)
 
-    def findPID(self,info, draw=True):
+    def findPID(self,info, draw=False):
         if len(info) !=0:
             fingers = []
             # Check for Thumb CX position
@@ -278,15 +278,15 @@ if __name__ == "__main__":
     face = faceDetectionCustom()
 
     """ Tello Webcam """
-    myDrone = face.initialize()
-    sleep(2)
-    myDrone.takeoff()
+    #myDrone = face.initialize()
+    #sleep(2)
+    #myDrone.takeoff()
     sleep(1)
     w, h = 640, 480
     while True:
 
         # Step 0 - Find Image From Tello Webcam
-        image = face.findImage(myDrone,w,h)
+        #image = face.findImage(myDrone,w,h)
 
         face.findNoseHand()
 
@@ -299,7 +299,8 @@ if __name__ == "__main__":
         # Step 2 - Calculate Speed
         droneSpeed = face.findPID(info)
 
-        cv2.imshow("Image Detection", face.image)
+        image = cv2.resize(face.image, (1020, 720))
+        cv2.imshow("Image Detection", image)
 
         if cv2.waitKey(1) & 0XFF == ord('q'):
             face.myDrone.land()
