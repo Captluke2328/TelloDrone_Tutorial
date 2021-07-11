@@ -70,6 +70,9 @@ class droneControlledWhistle():
         
         elif self.motion == "Takeoff":
             self.output = "Takeoff"
+
+        else:
+            self.output = "Listening"
         
         return [self.output,lr,fb,ud,yv]
 
@@ -103,7 +106,8 @@ if __name__ == "__main__":
     
     #myDrone = listen.initDrone()
     
-    #w,h = 360,240
+
+    w,h = 640,480
     
     while True:
 
