@@ -5,7 +5,6 @@ import keyboard as kp
 from time import sleep
 from djitellopy import Tello
 
-
 class droneControlledWhistle():
     def __init__(self):
         self.app = Flask(__name__)
@@ -107,7 +106,7 @@ if __name__ == "__main__":
     
     #myDrone = listen.initDrone()
     
-    #w,h = 360,240
+
     w,h = 640,480
     
     while True:
@@ -115,16 +114,16 @@ if __name__ == "__main__":
         # Step 1 - Capture Image from Webcam
         success,img = cap.read()       
         #size = img.shape
-        #h = img.shape[0] #1280
-        #w = img.shape[1] #720
-        img = cv2.resize(img, (w,h))
+        h = img.shape[0] #1280
+        w = img.shape[1] #720
+        #img = cv2.resize(img, (w,h))
 
         # Step 1 - Capture Image from Drone
         #img = listen.findImage(myDrone,w,h)
         
         # Step 2 - Listen to Audio and Set Drone Speed
         data = listen.classifyAudio()
-        #print(data)
+        print(data)
       
         # Step 3 - Fly the drone
         #myDrone.send_rc_control(data[1], data[2], data[3], data[4])
