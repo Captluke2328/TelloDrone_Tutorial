@@ -16,9 +16,9 @@ let classifier;
 let label = "listening";
 
 // Teachable Machine model URL:
-//let soundModelURL = 'https://teachablemachine.withgoogle.com/models/1-OdaTjEM/model.json';
+let soundModelURL = 'https://teachablemachine.withgoogle.com/models/1-OdaTjEM/model.json';
 //let soundModelURL = 'http://localhost:8000/Desktop/My_Project/Teachable_Machine_Tutorial/Audio_Classifier/Whistle_UpDownLeftRight_Classifier/model.json';
-let soundModelURL = 'http://127.0.0.1:5000/static/model.json';
+//let soundModelURL = 'http://127.0.0.1:5000/static/model.json';
 
 let result;
 let confidence = 0;
