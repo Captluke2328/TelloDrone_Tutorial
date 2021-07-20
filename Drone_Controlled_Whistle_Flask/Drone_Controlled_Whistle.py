@@ -47,8 +47,7 @@ class droneControlledWhistle():
         elif self.motion == "Right":
             self.output = "Turn Right"
             lr = speed
-        
-    
+
         elif self.motion == "Forward":
             self.output = "Forward"
             fb = speed
@@ -107,7 +106,7 @@ if __name__ == "__main__":
     #myDrone = listen.initDrone()
     
 
-    w,h = 640,480
+    #w,h = 640,480
     
     while True:
 
@@ -123,7 +122,7 @@ if __name__ == "__main__":
         
         # Step 2 - Listen to Audio and Set Drone Speed
         data = listen.classifyAudio()
-        print(data)
+        #print(data)
       
         # Step 3 - Fly the drone
         #myDrone.send_rc_control(data[1], data[2], data[3], data[4])
