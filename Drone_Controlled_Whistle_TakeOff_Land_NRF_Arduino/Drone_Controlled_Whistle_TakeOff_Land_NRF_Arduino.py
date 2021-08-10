@@ -15,7 +15,7 @@ class whistleTakeoffLand():
     def __init__(self):
         self.app = Flask(__name__)
         self.data = None
-        self.cap = cv2.VideoCapture(0)
+        #self.cap = cv2.VideoCapture(0)
         self.motion = None
         self.output = None
         self.startCounter = 0
@@ -135,7 +135,8 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
         listen = whistleTakeoffLand()
         listen.run()
 
-        ser = listen.initConnection("COM4", 9600)
+        #ser = listen.initConnection("COM4", 9600)
+        ser = listen.initConnection("/dev/cu.usbmodem11201", 9600)
         myDrone = listen.initDrone()
 
         w,h = 640,480
