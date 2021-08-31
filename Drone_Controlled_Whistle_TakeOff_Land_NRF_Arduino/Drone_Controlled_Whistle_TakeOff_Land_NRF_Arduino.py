@@ -136,7 +136,7 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
         listen.run()
 
         #ser = listen.initConnection("COM4", 9600)
-        ser = listen.initConnection("/dev/cu.usbmodem11201", 9600)
+        ser = listen.initConnection("/dev/cu.usbmodem1101", 9600)
         myDrone = listen.initDrone()
 
         w,h = 640,480

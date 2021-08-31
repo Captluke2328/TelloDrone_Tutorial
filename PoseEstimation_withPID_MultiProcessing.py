@@ -4,7 +4,6 @@ import time
 import numpy as np
 from djitellopy import Tello
 
-
 class poseDetectionModule():
     def __init__(self, mode=False, upBody=False, smooth=True,
                  detectionCon=0.5, trackCon=0.5):
