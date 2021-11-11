@@ -4,5 +4,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Machine Learning Tutorial" />
+    <orderEntry type="module" module-name="Python Project" />
+    <orderEntry type="module" module-name="IP_Replacement" />
   </component>
 </module>

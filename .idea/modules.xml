@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../IP_Replacement/.idea/IP_Replacement.iml" filepath="$PROJECT_DIR$/../../IP_Replacement/.idea/IP_Replacement.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Machine Learning Tutorial/.idea/Machine Learning Tutorial.iml" filepath="$PROJECT_DIR$/../Machine Learning Tutorial/.idea/Machine Learning Tutorial.iml" />
       <module fileurl="file://$PROJECT_DIR$/../MediaPipe_Tutorial/.idea/MediaPipe_Tutorial.iml" filepath="$PROJECT_DIR$/../MediaPipe_Tutorial/.idea/MediaPipe_Tutorial.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Python Project/.idea/Python Project.iml" filepath="$PROJECT_DIR$/../Python Project/.idea/Python Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/TelloDrone_Tutorial.iml" filepath="$PROJECT_DIR$/.idea/TelloDrone_Tutorial.iml" />
     </modules>
   </component>
